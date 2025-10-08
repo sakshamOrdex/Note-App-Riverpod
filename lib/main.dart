@@ -3,16 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/addPage.dart';
 import 'package:myapp/editPage.dart';
 import 'package:myapp/state_notifier.dart';
+import 'package:myapp/theme_provider.dart';
 
 void main() {
   runApp(ProviderScope(child: const MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: HomePage());
+  Widget build(BuildContext context,WidgetRef ref) {
+    final themeMode = ref.watch(themeNotifierProvider); 
+    return MaterialApp(
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: themeMode, 
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
+    );
   }
 }
 
@@ -20,6 +28,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final providers = ref.watch(noteProvider);
+    final themeNotifier = ref.read(themeNotifierProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -28,6 +37,14 @@ class HomePage extends ConsumerWidget {
         ),
         backgroundColor: Colors.blue.shade200,
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.brightness_6),
+            onPressed: () {
+              themeNotifier.toggleTheme();
+            },
+          ),
+        ],
       ),
       body: providers.isEmpty
           ? Center(
