@@ -1,4 +1,4 @@
-# myapp
+# Note App with Riverpod.
 
 A new Flutter project.
 
